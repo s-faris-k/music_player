@@ -1,11 +1,21 @@
-const languages = ["malayalam", "tamil", "telugu", "hindi", "english"]
+const languages = [
+  "malayalam",
+  "tamil",
+  "telugu",
+  "hindi",
+  "english"
+]
 
 export async function fetchSongsByLanguages() {
+
   try {
+
     const results = await Promise.all(
+
       languages.map(async (language) => {
+
         const response = await fetch(
-          `https://corsproxy.io/?https://www.jiosaavn.com/api.php?__call=content.getAlbums&api_version=4&_format=json&_marker=0&n=50&p=1&ctx=web6dot0&languages=${language}`
+          `/api/songs?language=${language}`
         )
 
         const data = await response.json()
@@ -22,7 +32,9 @@ export async function fetchSongsByLanguages() {
     return results
 
   } catch (error) {
+
     console.error("Error fetching songs:", error)
+
     return []
   }
 }
