@@ -3,29 +3,36 @@ import './songCard.css'
 
 export default function SongCard({ song }) {
 
-  const artists = song.primaryArtists
-    ?.map((artist) => artist.name)
-    .join(', ')
+  // console.log("Rendering SongCard for song:", song)
+
+  if (!song) return null
+
+  const artists = Array.isArray(song.primaryArtists)
+    ? song.primaryArtists.map((artist) => artist.name).join(', ')
+    : song.primaryArtists || 'Unknown Artist'
 
   return (
+
     <div className='song-card'>
 
       <div className='song-image-container'>
 
         <img
-          src={song.image}
-          alt={song.title}
+          src={song.image || ''}
+          alt={song.title || 'Song'}
           className='song-image'
         />
 
         <div className='song-overlay'>
+
           <h3 className='song-title'>
-            {song.title}
+            {song.title || 'Unknown Title'}
           </h3>
 
           <p className='song-artists'>
-            {song.primaryArtists.length > 0 ? artists : 'Unknown Artist'}
+            {artists}
           </p>
+
         </div>
 
       </div>

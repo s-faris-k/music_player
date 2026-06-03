@@ -51,15 +51,13 @@ export async function searchWithKey(query) {
 
     console.log("Fetched songs:", data)
 
-    
-
-    return data.results || []
+    return data.data || {}
 
   } catch (error) {
 
     console.error("Error fetching songs:", error)
 
-    return []
+    return {}
   }
 }
 
