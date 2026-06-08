@@ -43,21 +43,98 @@ export async function searchWithKey(query) {
 
   try {
 
+    const [
+      songsResponse,
+      albumsResponse,
+      artistsResponse,
+      playlistsResponse
+    ] = await Promise.all([
+
+      fetch(
+        `https://saavn.sumit.co/api/search/songs?query=${encodeURIComponent(query)}&page=0&limit=10`
+      ),
+
+      fetch(
+        `https://saavn.sumit.co/api/search/albums?query=${encodeURIComponent(query)}&page=0&limit=10`
+      ),
+
+      fetch(
+        `https://saavn.sumit.co/api/search/artists?query=${encodeURIComponent(query)}&page=0&limit=10`
+      ),
+
+      fetch(
+        `https://saavn.sumit.co/api/search/playlists?query=${encodeURIComponent(query)}&page=0&limit=10`
+      )
+
+    ])
+
+    const [
+      songsData,
+      albumsData,
+      artistsData,
+      playlistsData
+    ] = await Promise.all([
+
+      songsResponse.json(),
+      albumsResponse.json(),
+      artistsResponse.json(),
+      playlistsResponse.json()
+
+    ])
+
+    console.log("Songs:", songsData)
+    console.log("Albums:", albumsData)
+    console.log("Artists:", artistsData)
+    console.log("Playlists:", playlistsData)
+
+    return {
+
+      songs: songsData.data || [],
+      albums: albumsData.data || [],
+      artists: artistsData.data || [],
+      playlists: playlistsData.data || []
+
+    }
+
+  } catch (error) {
+
+    console.error("Error fetching search results:", error)
+
+    return {
+      songs: [],
+      albums: [],
+      artists: [],
+      playlists: []
+    }
+
+  }
+}
+
+
+export async function fetchSongById(id) {
+
+  try {
+
     const response = await fetch(
-      `https://saavn.sumit.co/api/search?query=${encodeURIComponent(query)}&limit=50&type=song`
+
+      `https://saavn.sumit.co/api/songs?ids=${encodeURIComponent(id)}`
+
     )
 
     const data = await response.json()
 
-    console.log("Fetched songs:", data)
+    console.log(data)
 
-    return data.data || {}
+    return data.data[0] || null
 
   } catch (error) {
 
-    console.error("Error fetching songs:", error)
+    console.error(
+      "Error fetching song:",
+      error
+    )
 
-    return {}
+    return null
   }
 }
 

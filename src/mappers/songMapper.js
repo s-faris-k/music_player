@@ -1,4 +1,4 @@
-const decodeHtmlEntities = (text) => {
+const decodeHtmlEntities = (text = "") => {
 
   const textarea = document.createElement("textarea")
 
@@ -7,93 +7,142 @@ const decodeHtmlEntities = (text) => {
   return textarea.value
 }
 
-export const mapSongfromList = (song) => {
-  // console.log("Mapping song:", song)
+const getImage = (images) => {
+
+  // old API sends direct string image
+  if (typeof images === "string") {
+    return images
+  }
+
+  // new API sends array
+  if (!Array.isArray(images)) {
+    return ""
+  }
+
+  const lastImage = images[images.length - 1]
+
+  return (
+    lastImage?.link ||
+    lastImage?.url ||
+    ""
+  )
+}
+
+export const mapHomeSong = (song) => {
 
   return {
+
     id: song.id,
 
     title: decodeHtmlEntities(song.title),
 
-    image: song.image,
+    image: getImage(song.image),
+
+    year: song.year,
+
+    language: song.language,
+
+    url: song.perma_url,
 
     albumId: song?.more_info?.album_id || null,
 
-    primaryArtists:
-      song?.more_info?.artistMap?.artists?.map((artist) => ({
-        id: artist.id,
-        name: artist.name
-      })) || []
+    album: decodeHtmlEntities(
+      song?.more_info?.album
+    ),
+
+    artists:
+
+      song?.more_info?.artistMap?.primary_artists
+        ?.map((artist) => ({
+          id: artist.id,
+          name: artist.name
+        })) || [],
+
+    artistNames:
+
+      song?.more_info?.artistMap?.primary_artists
+        ?.map((artist) => artist.name)
+        ?.join(", ") || ""
   }
 }
 
-
-export const mapSong = (song) => {
-
-  // console.log("Mapping song:", song)
+export const mapSearchSong = (song) => {
 
   return {
 
     id: song.id,
 
-    title: decodeHtmlEntities(song.title),
+    title: decodeHtmlEntities(
+      song.name
+    ),
 
-    image: Array.isArray(song.image)
-      ? (
-          song.image[song.image.length - 1]?.link ||
-          song.image[song.image.length - 1]?.url ||
-          ''
-        )
-      : song.image || '',
-      
-    albumId: song?.more_info?.album_id || null,
+    image: getImage(song.image),
 
-    primaryArtists:
+    year: song.year,
 
-      Array.isArray(song?.more_info?.artistMap?.primary_artists)
+    language: song.language,
 
-        ? song.more_info.artistMap.primary_artists.map((artist) => ({
-            id: artist.id,
-            name: artist.name
-          }))
+    url: song.url,
 
-        : song?.primaryArtists
-            ?.split(",")
-            ?.map((name, index) => ({
-              id: index,
-              name: name.trim()
-            })) || []
+    albumId: song?.album?.id || null,
+
+    album: song?.album?.name || "",
+
+    artists:
+
+      song?.artists?.primary
+        ?.map((artist) => ({
+          id: artist.id,
+          name: artist.name
+        })) || [],
+
+    artistNames:
+
+      song?.artists?.primary
+        ?.map((artist) => artist.name)
+        ?.join(", ") || ""
   }
 }
 
 export const mapAlbum = (album) => {
-  // console.log("Mapping album:", album)
 
   return {
+
     id: album.id,
 
-    title: decodeHtmlEntities(album.title),
+    title: decodeHtmlEntities(
+      album.name || album.title
+    ),
 
-    image: album.image?.[2] || null,
+    image: getImage(album.image),
 
-    artist: album.artist,
+    primaryArtists:
+
+      album?.artists?.primary
+        ?.map((artist) => artist.name)
+        ?.join(", ") || "",
 
     more_songs: Array.isArray(album.songIds)
+
       ? album.songIds.map((songId) => ({
-          id: songId,
+          id: songId
         }))
-      : [],
+
+      : []
   }
 }
 
 export const mapArtist = (artist) => {
-  console.log("Mapping artist:", artist)
 
   return {
 
     id: artist.id,
-    name: decodeHtmlEntities(artist.title),
-    image: artist.image[2]
+
+    name: decodeHtmlEntities(
+      artist.title || artist.name
+    ),
+
+    image: getImage(artist.image)
   }
 }
 
@@ -101,6 +150,16 @@ export const mapPlaylist = (playlist) => {
 
   return {
 
-    id: playlist.id || null,
+    id: playlist.id,
+
+    title: decodeHtmlEntities(
+      playlist.title || playlist.name
+    ),
+    language: decodeHtmlEntities(
+      playlist.language
+    ),
+
+
+    image: getImage(playlist.image)
   }
 }

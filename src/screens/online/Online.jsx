@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 
 import { fetchSongsByLanguages } from "../../library/SongApis"
 
-import { mapSongfromList } from '../../mappers/songMapper'
+import { mapHomeSong } from '../../mappers/songMapper'
 
 import Songcard from '../../components/SongCard'
 
@@ -32,7 +32,7 @@ export default function Online() {
 
         const mappedData = response.map((item) => ({
           language: item.language,
-          songs: item.songs.map(mapSongfromList)
+          songs: item.songs.map(mapHomeSong)
         }))
 
         setSongsByLanguage(mappedData)

@@ -1,19 +1,20 @@
 import React from 'react'
+
 import './songCard.css'
 
-export default function SongCard({ song }) {
-
-  // console.log("Rendering SongCard for song:", song)
+export default function SongCard({
+  song,
+  onClick
+}) {
 
   if (!song) return null
 
-  const artists = Array.isArray(song.primaryArtists)
-    ? song.primaryArtists.map((artist) => artist.name).join(', ')
-    : song.primaryArtists || 'Unknown Artist'
-
   return (
 
-    <div className='song-card'>
+    <div
+      className='song-card'
+      onClick={onClick}
+    >
 
       <div className='song-image-container'>
 
@@ -26,11 +27,21 @@ export default function SongCard({ song }) {
         <div className='song-overlay'>
 
           <h3 className='song-title'>
-            {song.title || 'Unknown Title'}
+
+            {
+              song.title ||
+              'Unknown Title'
+            }
+
           </h3>
 
           <p className='song-artists'>
-            {artists}
+
+            {
+              song.artistNames ||
+              'Unknown Artist'
+            }
+
           </p>
 
         </div>

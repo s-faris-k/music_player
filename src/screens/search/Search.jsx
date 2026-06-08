@@ -1,10 +1,14 @@
-import React, { useEffect } from 'react'
-import { useSearchParams, useNavigate } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+
+import {
+  useSearchParams,
+  useNavigate
+} from 'react-router-dom'
 
 import { searchWithKey } from "../../library/SongApis"
 
 import {
-  mapSong,
+  mapSearchSong,
   mapAlbum,
   mapArtist,
   mapPlaylist
@@ -13,28 +17,41 @@ import {
 import Songcard from '../../components/SongCard'
 import AlbumCard from '../../components/AlbumCard'
 import ArtistCard from '../../components/ArtistCard'
+
 import './search.css'
 
 export default function Search() {
 
   const [searchParams] = useSearchParams()
+
   const navigate = useNavigate()
 
-  const [searchResults, setSearchResults] = React.useState({
+  const query = searchParams.get("q") || ""
+
+  const [searchResults, setSearchResults] = useState({
     songs: [],
     albums: [],
     artists: [],
-    playlists: [],
-    topQuery: []
+    playlists: []
   })
 
-  const [loading, setLoading] = React.useState(true)
-  const [error, setError] = React.useState(null)
-  const [searchText, setSearchText] = React.useState("")
+  const [loading, setLoading] = useState(false)
 
-  const query = searchParams.get("q")
+  const [error, setError] = useState(null)
 
+  const [searchText, setSearchText] = useState(query)
+
+  // Sync input with URL query
   useEffect(() => {
+
+    setSearchText(query)
+
+  }, [query])
+
+  // Fetch search results
+  useEffect(() => {
+
+    if (!query.trim()) return
 
     const searchSong = async () => {
 
@@ -42,21 +59,25 @@ export default function Search() {
 
         setLoading(true)
 
+        setError(null)
+
         const response = await searchWithKey(query)
 
         console.log("Search results:", response)
 
         const mappedData = {
 
-          songs: response?.songs?.results?.map(mapSong) || [],
+          songs:
+            response?.songs?.results?.map(mapSearchSong) || [],
 
-          albums: response?.albums?.results?.map(mapAlbum) || [],
+          albums:
+            response?.albums?.results?.map(mapAlbum) || [],
 
-          artists: response?.artists?.results?.map(mapArtist) || [],
+          artists:
+            response?.artists?.results?.map(mapArtist) || [],
 
-          playlists: response?.playlists?.results?.map(mapPlaylist) || [],
-
-          topQuery: response?.topQuery?.results || []
+          playlists:
+            response?.playlists?.results?.map(mapPlaylist) || []
         }
 
         setSearchResults(mappedData)
@@ -73,11 +94,81 @@ export default function Search() {
       }
     }
 
-    if (query) {
-      searchSong()
-    }
+    searchSong()
 
   }, [query])
+
+  const handleSearch = () => {
+
+    if (!searchText.trim()) {
+
+      alert("Please enter a search term.")
+
+      return
+    }
+
+    navigate(
+      `/search?q=${encodeURIComponent(searchText)}`
+    )
+  }
+
+  // Empty query screen
+  if (!query.trim()) {
+
+    return (
+
+      <div className='screen-container'>
+
+        <div className='online-content'>
+
+          <div className='header'>
+
+            <h1>Search</h1>
+
+            <div className='search-container'>
+
+              <input
+                type="text"
+                placeholder="Search songs..."
+                className='search-input'
+                value={searchText}
+                onChange={(e) =>
+                  setSearchText(e.target.value)
+                }
+                onKeyDown={(e) => {
+
+                  if (e.key === "Enter") {
+
+                    handleSearch()
+                  }
+                }}
+              />
+
+              <button
+                className='search-button'
+                onClick={handleSearch}
+              >
+                Search
+              </button>
+
+            </div>
+
+          </div>
+
+          <div className='no-query'>
+
+            <h2>
+              Enter a search term to find songs,
+              albums, artists, and playlists.
+            </h2>
+
+          </div>
+
+        </div>
+
+      </div>
+    )
+  }
 
   return (
 
@@ -85,9 +176,11 @@ export default function Search() {
 
       <div className='online-content'>
 
+        {/* Header */}
+
         <div className='header'>
 
-          <h1>Search ..</h1>
+          <h1>Search</h1>
 
           <div className='search-container'>
 
@@ -96,22 +189,21 @@ export default function Search() {
               placeholder="Search songs..."
               className='search-input'
               value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
+              onChange={(e) =>
+                setSearchText(e.target.value)
+              }
+              onKeyDown={(e) => {
+
+                if (e.key === "Enter") {
+
+                  handleSearch()
+                }
+              }}
             />
 
             <button
               className='search-button'
-              onClick={() => {
-
-                if (!searchText.trim()) {
-
-                  alert("Please enter a search term.")
-
-                } else {
-
-                  navigate(`/search?q=${encodeURIComponent(searchText)}`)
-                }
-              }}
+              onClick={handleSearch}
             >
               Search
             </button>
@@ -120,106 +212,157 @@ export default function Search() {
 
         </div>
 
-        {loading && <p>Loading songs...</p>}
+        {/* Loading */}
 
-        {error && <p>Error: {error}</p>}
+        {loading && (
+
+          <p>Loading songs...</p>
+
+        )}
+
+        {/* Error */}
+
+        {error && (
+
+          <p>Error: {error}</p>
+
+        )}
+
+        {/* Results */}
 
         {!loading && !error && (
 
-  <>
-    {/* Songs Section */}
-    <div className='language-section'>
+          <>
 
-      <h2 className='language-title'>
-        Songs
-      </h2>
+            {/* Songs */}
 
-      <div className='songs_list'>
-
-        {searchResults.songs.length > 0 ? (
-
-          searchResults.songs.map((song) => (
-
-            <Songcard
-              key={song.id}
-              song={song}
-            />
-
-          ))
-
-        ) : (
-
-          <p>No songs found.</p>
-
-        )}
-
-      </div>
-
-    </div>
-
-    {/* Albums Section */}
-    <div className='language-section'>
-
-      <h2 className='language-title'>
-        Albums
-      </h2>
-
-      <div className='songs_list'>
-
-        {searchResults.albums.length > 0 ? (
-
-          searchResults.albums.map((album) => (
-
-            <AlbumCard
-              key={album.id}
-              album={album}
-            />
-
-          ))
-
-        ) : (
-
-          <p>No albums found.</p>
-
-        )}
-
-      </div>
-
-    </div>
-
-        {/* artists section */}
             <div className='language-section'>
 
-      <h2 className='language-title'>
-        Artists
-      </h2>
+              <h2 className='language-title'>
+                Songs
+              </h2>
 
-      <div className='songs_list'>
+              <div className='songs_list'>
 
-        {searchResults.artists.length > 0 ? (
+                {searchResults.songs.length > 0 ? (
 
-          searchResults.artists.map((artist) => (
+                  searchResults.songs.map((song) => (
 
-            <ArtistCard
-              key={artist.id}
-              artist={artist}
-            />
+                    <Songcard
+                      song={song}
+                      onClick={() =>
+                        navigate(`/song/${song.id}`)
+                      }
+                    />
 
-          ))
+                  ))
 
-        ) : (
+                ) : (
 
-          <p>No albums found.</p>
+                  <p>No songs found.</p>
+
+                )}
+
+              </div>
+
+            </div>
+
+            {/* Albums */}
+
+            <div className='language-section'>
+
+              <h2 className='language-title'>
+                Albums
+              </h2>
+
+              <div className='songs_list'>
+
+                {searchResults.albums.length > 0 ? (
+
+                  searchResults.albums.map((album) => (
+
+                    <AlbumCard
+                      key={album.id}
+                      album={album}
+                    />
+
+                  ))
+
+                ) : (
+
+                  <p>No albums found.</p>
+
+                )}
+
+              </div>
+
+            </div>
+
+            {/* Artists */}
+
+            <div className='language-section'>
+
+              <h2 className='language-title'>
+                Artists
+              </h2>
+
+              <div className='songs_list'>
+
+                {searchResults.artists.length > 0 ? (
+
+                  searchResults.artists.map((artist) => (
+
+                    <ArtistCard
+                      key={artist.id}
+                      artist={artist}
+                    />
+
+                  ))
+
+                ) : (
+
+                  <p>No artists found.</p>
+
+                )}
+
+              </div>
+
+            </div>
+
+            {/* Playlists */}
+
+            <div className='language-section'>
+
+              <h2 className='language-title'>
+                Playlists
+              </h2>
+
+              <div className='songs_list'>
+
+                {searchResults.playlists.length > 0 ? (
+
+                  searchResults.playlists.map((playlist) => (
+
+                    <AlbumCard
+                      key={playlist.id}
+                      album={playlist}
+                    />
+
+                  ))
+
+                ) : (
+
+                  <p>No playlists found.</p>
+
+                )}
+
+              </div>
+
+            </div>
+
+          </>
 
         )}
-
-      </div>
-
-    </div>
-  </>
-
-)}
-  
 
       </div>
 

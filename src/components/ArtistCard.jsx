@@ -3,7 +3,7 @@ import './songCard.css'
 
 export default function ArtistCard({ artist }) {
 
-  console.log("Rendering ArtistCard for artist:", artist)
+  // console.log("Rendering ArtistCard for artist:", artist)
 
 //   const artists = song.primaryArtists
 //     ?.map((artist) => artist.name)
@@ -15,7 +15,7 @@ export default function ArtistCard({ artist }) {
       <div className='song-image-container'>
 
         <img
-          src={artist.image?.url || ''}
+          src={artist.image || ''}
           alt={artist.name || 'Artist'}
           className='song-image'
         />

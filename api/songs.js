@@ -8,7 +8,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'language query parameter is required' })
     }
 
-    const url = `https://www.jiosaavn.com/api.php?__call=content.getAlbums&api_version=4&_format=json&_marker=0&n=50&p=1&ctx=web6dot0&languages=${encodeURIComponent(language)}`
+    const url = `https://corsproxy.io/?https://www.jiosaavn.com/api.php?__call=content.getAlbums&api_version=4&_format=json&_marker=0&n=50&p=1&ctx=web6dot0&languages=${encodeURIComponent(language)}`
 
     const response = await fetch(url, {
       headers: {

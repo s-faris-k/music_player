@@ -3,7 +3,7 @@ import './songCard.css'
 
 export default function AlbumCard({ album }) {
 
-  console.log("Rendering AlbumCard for song:", album)
+  // console.log("Rendering AlbumCard for song:", album)
 
 //   const artists = song.primaryArtists
 //     ?.map((artist) => artist.name)
@@ -15,7 +15,7 @@ export default function AlbumCard({ album }) {
       <div className='song-image-container'>
 
         <img
-          src={album.image.url || ''}
+          src={album.image || ''}
           alt={album.title}
           className='song-image'
         />
@@ -25,9 +25,9 @@ export default function AlbumCard({ album }) {
             {album.title}
           </h3>
 
-          {/* <p className='song-artists'>
-            {artists || 'Unknown Artist'}
-          </p> */}
+          <p className='song-artists'>
+            {album.language || 'Unknown Artist'}
+          </p>
 
         </div>
 
