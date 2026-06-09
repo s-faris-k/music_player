@@ -7,10 +7,10 @@ import {
   useParams
 } from 'react-router-dom'
 
-import './song.css'
+import './album.css'
 
 import {
-  fetchSongById
+  fetchAlbumById
 } from '../../library/SongApis'
 
 const decodeHtmlEntities = (text = "") => {
@@ -29,7 +29,7 @@ const getImage = (images) => {
   return images[images.length - 1]?.url || ""
 }
 
-export default function Song() {
+export default function Album() {
 
   const { id } = useParams()
 
@@ -53,7 +53,7 @@ export default function Song() {
         setError(null)
 
         const response =
-          await fetchSongById(id)
+          await fetchAlbumById(id)
 
         console.log(
           "Fetched song details:",

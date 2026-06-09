@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import { CiSearch } from "react-icons/ci";
+
 
 import {
   useSearchParams,
@@ -144,12 +146,12 @@ export default function Search() {
                 }}
               />
 
-              <button
+              <CiSearch
                 className='search-button'
                 onClick={handleSearch}
               >
-                Search
-              </button>
+               
+              </CiSearch>
 
             </div>
 
@@ -284,6 +286,9 @@ export default function Search() {
                     <AlbumCard
                       key={album.id}
                       album={album}
+                      onClick={() =>
+                        navigate(`/album/${album.id}`)
+                      }
                     />
 
                   ))
