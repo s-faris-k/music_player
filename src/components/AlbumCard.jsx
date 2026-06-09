@@ -1,7 +1,7 @@
 import React from 'react'
 import './songCard.css'
 
-export default function AlbumCard({ album }) {
+export default function AlbumCard({ album , onClick }) {
 
   // console.log("Rendering AlbumCard for song:", album)
 
@@ -10,7 +10,7 @@ export default function AlbumCard({ album }) {
 //     .join(', ')
 
   return (
-    <div className='song-card'>
+    <div className='song-card' onClick={onClick}>
 
       <div className='song-image-container'>
 

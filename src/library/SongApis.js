@@ -138,3 +138,31 @@ export async function fetchSongById(id) {
   }
 }
 
+
+
+export async function fetchAlbumById(id) {
+
+  try {
+
+    const response = await fetch(`https://saavn.sumit.co/api/albums?id=${id}`
+
+ 
+
+    )
+
+    const data = await response.json()
+
+    console.log("fetchAlbumById response:", data)
+
+    return data.data[0] || null
+
+  } catch (error) {
+
+    console.error(
+      "Error fetching song:",
+      error
+    )
+
+    return null
+  }
+}

@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import { CiSearch } from "react-icons/ci";
+
 
 import { fetchSongsByLanguages } from "../../library/SongApis"
 
@@ -62,27 +64,33 @@ export default function Online() {
         <h1>Latest Songs</h1>
         <div className='search-container'>
 
-          <input
-            type="text"
-            placeholder="Search songs..."
-            className='search-input'
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-            />
-
-            <button
-            className='search-button'
-            onClick={() => {
-
-              if (!searchText.trim()) 
+        <input
+          type="text"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              if (!searchText.trim()) {
                 alert("Please enter a search term.")
-              else
+              } else {
                 navigate(`/search?q=${encodeURIComponent(searchText)}`)
-              
-            }}
-          >
-            Search
-          </button>
+              }
+            }
+          }}
+        />
+
+        <CiSearch
+          className='search-button'
+          onClick={() => {
+            if (!searchText.trim()) {
+              alert("Please enter a search term.")
+            } else {
+              navigate(`/search?q=${encodeURIComponent(searchText)}`)
+            }
+          }}
+        >
+          Search
+        </CiSearch>
 
           </div>
         </div>
