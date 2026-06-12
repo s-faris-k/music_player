@@ -24,11 +24,12 @@ export default function AlbumCard({ album , onClick }) {
           <h3 className='song-title'>
             {album.title}
           </h3>
-
           <p className='song-artists'>
-            {album.language || 'Unknown Artist'}
+            {album.type}
           </p>
-
+          <p className='song-artists'>
+            {album.year}
+          </p>
         </div>
 
       </div>

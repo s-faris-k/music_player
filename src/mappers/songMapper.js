@@ -28,11 +28,15 @@ const getImage = (images) => {
   )
 }
 
-export const mapHomeSong = (song) => {
+export const maphomeSong = (song) => {
+
+  // console.log("Mapping song:", song)
 
   return {
 
     id: song.id,
+
+    type: "song",
 
     title: decodeHtmlEntities(song.title),
 
@@ -68,9 +72,13 @@ export const mapHomeSong = (song) => {
 
 export const mapSearchSong = (song) => {
 
+  // console.log("Mapping search song:", song)
+
   return {
 
     id: song.id,
+
+    type: "song",
 
     title: decodeHtmlEntities(
       song.name
@@ -106,9 +114,13 @@ export const mapSearchSong = (song) => {
 
 export const mapAlbum = (album) => {
 
+  // console.log("Mapping album:", album)
+
   return {
 
     id: album.id,
+
+    type: "album",
 
     title: decodeHtmlEntities(
       album.name || album.title
@@ -122,14 +134,10 @@ export const mapAlbum = (album) => {
         ?.map((artist) => artist.name)
         ?.join(", ") || "",
 
-    more_songs: Array.isArray(album.songIds)
-
-      ? album.songIds.map((songId) => ({
-          id: songId
-        }))
-
-      : []
+      year: album.more_info?.release_date?.split("-")[0] || null
   }
+
+ 
 }
 
 export const mapArtist = (artist) => {

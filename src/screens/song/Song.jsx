@@ -2,6 +2,7 @@ import React, {
   useEffect,
   useState
 } from 'react'
+import { FaPlayCircle } from "react-icons/fa";
 
 import {
   useParams
@@ -235,7 +236,7 @@ export default function Song() {
 
   
             <div className='button-group'>
-              <button>Play</button>
+              <button>Play Now</button>
               <button>Play Next</button>
               <select
                 onChange={(e) => {
