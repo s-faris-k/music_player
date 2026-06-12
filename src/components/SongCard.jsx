@@ -7,6 +7,7 @@ export default function SongCard({
   onClick
 }) {
 
+  // console.log("Rendering SongCard for song:", song)
   if (!song) return null
 
   return (
@@ -39,6 +40,15 @@ export default function SongCard({
 
             {
               song.artistNames ||
+              'Unknown Artist'
+            }
+
+          </p>
+
+          <p className='song-artists'>
+
+            {
+              song.year ||
               'Unknown Artist'
             }
 

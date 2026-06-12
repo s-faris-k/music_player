@@ -41,7 +41,7 @@
 
     height: 100%;
 
-    object-fit: cover;
+    object-fit: fill;
 
     object-position: center;
 
@@ -93,6 +93,7 @@
     font-size: 13px;
 
     margin-top: 5px;
+    margin-bottom: 2px;
 
     overflow: hidden;
 

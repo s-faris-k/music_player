@@ -6,7 +6,7 @@ const languages = [
   "english"
 ]
 
-export async function fetchSongsByLanguages() {
+export async function fetchHomeData() {
 
   try {
 
@@ -19,15 +19,15 @@ export async function fetchSongsByLanguages() {
         )
 
         const data = await response.json()
-
+        
         return {
           language,
-          songs: data.data || []
+          items: data.data || []
         }
       })
     )
 
-    console.log("Fetched songs:", results)
+    // console.log("Fetched songs:", results)
 
     return results
 
