@@ -123,7 +123,7 @@ export async function fetchSongById(id) {
 
     const data = await response.json()
 
-    console.log(data)
+    // console.log(data)
 
     return data.data[0] || null
 
@@ -146,15 +146,13 @@ export async function fetchAlbumById(id) {
 
     const response = await fetch(`https://saavn.sumit.co/api/albums?id=${id}`
 
- 
-
     )
 
-    const data = await response.json()
+    const res = await response.json()
 
-    console.log("fetchAlbumById response:", data)
+    // console.log("fetchAlbumById response:", res)
 
-    return data.data[0] || null
+    return res.data || null
 
   } catch (error) {
 

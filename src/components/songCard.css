@@ -81,7 +81,7 @@
 
     overflow: hidden;
 
-    text-overflow: ellipsis;
+    animation: marquee 10s linear infinite;
 
     white-space: nowrap;
 }
@@ -97,7 +97,17 @@
 
     overflow: hidden;
 
-    text-overflow: ellipsis;
+    /* text-overflow: ellipsis; */
 
     white-space: nowrap;
+    animation: marquee 10s linear infinite;
+}
+
+@keyframes marquee {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-100%);
+    }
 }

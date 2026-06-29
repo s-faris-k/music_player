@@ -1,270 +1,159 @@
-import React, {
-  useEffect,
-  useState
-} from 'react'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router-dom'
+import AlbumSongCard from '../../components/AlbumSongCard'
+import { mapSearchSong , mapAlbum} from '../../mappers/songMapper'
 
-import {
-  useParams
-} from 'react-router-dom'
 
 import './album.css'
 
-import {
-  fetchAlbumById
-} from '../../library/SongApis'
+import { fetchAlbumById } from '../../library/SongApis'
 
 const decodeHtmlEntities = (text = "") => {
-
   const textarea = document.createElement("textarea")
-
   textarea.innerHTML = text
-
   return textarea.value
 }
 
 const getImage = (images) => {
-
   if (!Array.isArray(images)) return ""
 
   return images[images.length - 1]?.url || ""
 }
 
 export default function Album() {
-
   const { id } = useParams()
 
-  const [songDetails, setSongDetails] =
-    useState(null)
-
-  const [loading, setLoading] =
-    useState(true)
-
-  const [error, setError] =
-    useState(null)
+  const [albumDetails, setAlbumDetails] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
-
-    const fetchSongDetails = async () => {
-
+    const fetchAlbumDetails = async () => {
       try {
-
         setLoading(true)
-
         setError(null)
 
-        const response =
-          await fetchAlbumById(id)
+        const response = await fetchAlbumById(id)
 
-        console.log(
-          "Fetched song details:",
-          response
-        )
+        // console.log("Fetched album details:", response)
 
-        setSongDetails(response)
-
+        setAlbumDetails(response)
       } catch (error) {
-
-        console.error(
-          "Error fetching song details:",
-          error
-        )
+        console.error("Error fetching album details:", error)
 
         setError(
-          error?.message ||
-          "Failed to fetch song details"
+          error?.message || "Failed to fetch album details"
         )
-
       } finally {
-
         setLoading(false)
       }
     }
 
     if (id) {
-
-      fetchSongDetails()
+      fetchAlbumDetails()
     }
-
   }, [id])
 
   if (loading) {
-
     return (
-
-      <div className='screen-container'>
-
-        <div className='song-content'>
-
+      <div className="screen-container">
+        <div className="album-content">
           <p>Loading...</p>
-
         </div>
-
       </div>
     )
   }
 
   if (error) {
-
     return (
-
-      <div className='screen-container'>
-
-        <div className='song-content'>
-
+      <div className="screen-container">
+        <div className="album-content">
           <p>{error}</p>
-
         </div>
-
       </div>
     )
   }
 
-  if (!songDetails) {
-
+  if (!albumDetails) {
     return (
-
-      <div className='screen-container'>
-
-        <div className='song-content'>
-
-          <p>Song not found.</p>
-
+      <div className="screen-container">
+        <div className="album-content">
+          <p>Album not found.</p>
         </div>
-
       </div>
     )
   }
 
   return (
+    <div className="screen-container">
+      <div className="album-content">
+        
+    <div className="album-header">
 
-    <div className='screen-container'>
-
-      <div className='song-content'>
-
-        {/* Song Title */}
-
-        <div className='song-name'>
-
-          {
-            decodeHtmlEntities(
-              songDetails?.name
-            ) || 'Unknown Title'
-          }
-
+        {/* Album Title */}
+        <div className="album-name">
+          {decodeHtmlEntities(albumDetails?.name) || "Unknown Title"}
         </div>
 
-        {/* Song Details */}
-
-        <div className='song-details'>
+        {/* Album Details */}
+        <div className="album-details">
 
           {/* Left Section */}
-
-          <div className='song-detail-image-container'>
-
+          <div className="album-detail-image-container">
             <img
-              src={getImage(songDetails?.image)}
-              alt={
-                songDetails?.name || 'Song'
-              }
-              className='song-image'
+              src={getImage(albumDetails?.image)}
+              alt={albumDetails?.name || "Album"}
+              className="album-image"
             />
-
           </div>
 
           {/* Right Section */}
-
-          <div className='song-info'>
-
-            <div>
-
-              <strong> 
-
-              {
-                decodeHtmlEntities(
-                  songDetails?.name
-                ) || 'Unknown Title'
-              }
-              </strong>
-
-            </div>
+          <div className="album-info">
 
             <div>
+              <strong>
+                {decodeHtmlEntities(albumDetails?.name) || "Unknown Title"}
 
-
-
-              {
-                decodeHtmlEntities(
-                  songDetails?.album?.name
-                ) || 'Unknown Album'
-              }
-
-            </div>
-
-            <div>
-
-     
-
-
-
-              {
-                songDetails?.artists?.primary
-                  ?.map(
-                    (artist) => artist.name
-                  )
-                  ?.join(", ")
-                  || 'Unknown Artists'
-              }
-
-            </div>
-
-            <div>
-              <strong>{songDetails?.language || 'Unknown'} . {songDetails?.year || 'Unknown'} . {
-                songDetails?.duration
-                  ? `${Math.floor(
-                      songDetails.duration / 60
-                    )}:${String(
-                      songDetails.duration % 60
-                    ).padStart(2, '0')}`
-                  : 'Unknown'
-              } . {
-                songDetails?.playCount ||
-                '0'
-              } plays
+                {albumDetails?.year && (
+                  <span> ({albumDetails.year})</span>
+                )}
               </strong>
             </div>
 
-  
-            <div className='button-group'>
-              <button>Play</button>
-              <button>Play Next</button>
-              <select
-                onChange={(e) => {
-                  if (e.target.value) {
-                    window.open(e.target.value)
-                  }
-                }}
-              >
-                <option value="">Download</option>
+            <div>
+              {decodeHtmlEntities(albumDetails?.description) || "Unknown Album"}
+            </div>
 
-                {songDetails?.downloadUrl
-                  ?.slice(-3)
-                  ?.map((audio) => (
-                    <option
-                      key={audio.quality}
-                      value={audio.url}
-                    >
-                      {audio.quality}
-                    </option>
-                  ))}
-              </select>
+            <div>
+              Songs: {albumDetails?.songs?.length || 0}
+            </div>
+
+            <div>
+              {albumDetails?.artists?.all
+                ?.map((artist) => artist.name)
+                ?.join(", ") || "Unknown Artists"}
             </div>
 
           </div>
 
         </div>
+        </div>
+       <div className="album-songs">
+            {albumDetails?.songs?.length > 0 ? (
+              albumDetails.songs.map((song) => (
+                <AlbumSongCard
+                  key={song.id}
+                  song={mapSearchSong(song)}
+                />
+              ))
+            ) : (
+              <p>No songs available for this album.</p>
+            )}
+
+          </div>
 
       </div>
-
     </div>
   )
 }
+
