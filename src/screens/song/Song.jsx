@@ -1,18 +1,17 @@
-import React, {
-  useEffect,
-  useState
-} from 'react'
+import React, {  useEffect,  useState} from 'react'
 import { FaPlayCircle } from "react-icons/fa";
 
-import {
-  useParams
-} from 'react-router-dom'
+import {  useParams} from 'react-router-dom'
 
 import './song.css'
 
-import {
-  fetchSongById
-} from '../../library/SongApis'
+import {  fetchSongById} from '../../library/SongApis'
+
+import { useNavigate } from 'react-router-dom'
+
+import { mapSearchSong , mapAlbum} from '../../mappers/songMapper'
+
+
 
 const decodeHtmlEntities = (text = "") => {
 
@@ -32,16 +31,14 @@ const getImage = (images) => {
 
 export default function Song() {
 
+  const navigate = useNavigate()
   const { id } = useParams()
 
-  const [songDetails, setSongDetails] =
-    useState(null)
+  const [songDetails, setSongDetails] =    useState(null)
 
-  const [loading, setLoading] =
-    useState(true)
+  const [loading, setLoading] =    useState(true)
 
-  const [error, setError] =
-    useState(null)
+  const [error, setError] =    useState(null)
 
   useEffect(() => {
 
@@ -219,7 +216,7 @@ export default function Song() {
             </div>
 
             <div>
-              <strong>{songDetails?.language || 'Unknown'} . {songDetails?.year || 'Unknown'} . {
+              <strong>{songDetails?.language || 'Unknown'} * {songDetails?.year || 'Unknown'} * {
                 songDetails?.duration
                   ? `${Math.floor(
                       songDetails.duration / 60
@@ -227,7 +224,7 @@ export default function Song() {
                       songDetails.duration % 60
                     ).padStart(2, '0')}`
                   : 'Unknown'
-              } . {
+              } * {
                 songDetails?.playCount ||
                 '0'
               } plays
@@ -236,7 +233,16 @@ export default function Song() {
 
   
             <div className='button-group'>
-              <button>Play Now</button>
+              <button onClick={() =>
+               navigate("/player", {
+                  state: {
+                    type: "song",
+                    song: mapSearchSong(songDetails)
+                  }
+                })
+              }
+              >
+          Play Now</button>
               <button>Play Next</button>
               <select
                 onChange={(e) => {

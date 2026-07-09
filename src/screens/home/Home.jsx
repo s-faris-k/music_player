@@ -20,7 +20,7 @@ export default function Home() {
             <Route path="/online" element={<Online />} />
             <Route path="/library" element={<Library />} />
             <Route path="/search" element={<Search />} />
-            <Route path="/player" element={<Player />} />
+            <Route path="/player/" element={<Player />} />
             <Route path="/song/:id" element={<Song />} />
             <Route path="/album/:id" element={<Album />} />
 

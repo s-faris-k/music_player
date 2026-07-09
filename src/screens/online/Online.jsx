@@ -43,7 +43,7 @@ export default function Online() {
             if (entry.type === "album") {
               return mapAlbum(entry)
             }
-
+            // console.log(entry)
             return maphomeSong(entry)
           })
         }))
