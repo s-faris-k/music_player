@@ -1,4 +1,5 @@
 @import url('./shared/gloablStyles.css');
+@import "tailwindcss";
 
 body{
   margin: 0;

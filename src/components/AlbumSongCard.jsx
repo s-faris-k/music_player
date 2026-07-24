@@ -8,17 +8,18 @@ export default function AlbumSongCard({ song }) {
   console.log(song)
   const navigate = useNavigate()
   return (
-    <div className="song-container">
+    
+    <div className="flex flex-row gap-5 h-30">
 
-      <div className="album-song-image-container">
+      <div className="w-[15%] h-[100%]">
         <img
           src={song.image || ""}
           alt={song.title || "Song"}
-          className="album-song-image"
+          className="rounded-sm"
         />
       </div>
 
-      <div className="album-song-details">
+      <div className="flex flex-col gap-1 pt-2 w-[70%]">
 
         <div className="song-name">
           {song.title || "Unknown Song"}
@@ -41,7 +42,7 @@ export default function AlbumSongCard({ song }) {
           className="play-song"
           onClick={() =>
             navigate(`/player`, {
-              state: { song, type: "song" },
+              state: { song: song, type: "song" },
 
             })
           }
