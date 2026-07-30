@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { mapSearchSong , mapAlbum} from '../../mappers/songMapper'
 
+import { usePlayer } from "../../context/PlayerContext";
 
 
 const decodeHtmlEntities = (text = "") => {
@@ -30,6 +31,8 @@ const getImage = (images) => {
 }
 
 export default function Song() {
+
+  const { playSong } = usePlayer();
 
   const navigate = useNavigate()
   const { id } = useParams()
@@ -233,16 +236,9 @@ export default function Song() {
 
   
             <div className='button-group'>
-              <button onClick={() =>
-               navigate("/player", {
-                  state: {
-                    type: "song",
-                    song: mapSearchSong(songDetails)
-                  }
-                })
-              }
-              >
-          Play Now</button>
+          <button onClick={() => playSong(mapSearchSong(songDetails))}>
+            Play Now
+          </button>
               <button>Play Next</button>
               <select
                 onChange={(e) => {

@@ -9,6 +9,9 @@ import { maphomeSong , mapAlbum} from '../../mappers/songMapper'
 import Songcard from '../../components/SongCard'
 import AlbumCard from '../../components/AlbumCard'
 
+
+import { usePlayer } from "../../context/PlayerContext";
+
 import './online.css'
 
 export default function Online() {

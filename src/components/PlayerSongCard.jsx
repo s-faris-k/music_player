@@ -4,13 +4,13 @@ import { useNavigate } from 'react-router-dom'
 
 
 export default function AlbumSongCard({ song }) {
-  console.log(song)
+  // console.log(song)
   const navigate = useNavigate()
   return (
     
 <div className="flex items-center gap-3 h-20 w-full glass">
   {/* Image */}
-  <div className="w-14 h-14 flex-shrink-0">
+  <div className="w-14 h-14 flex-shrink-0 pl-2" >
     <img
       src={song.image}
       alt={song.title}
