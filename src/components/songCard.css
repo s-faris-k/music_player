@@ -79,7 +79,7 @@
 
     margin: 0;
 
-    overflow: hidden;
+    /* overflow: hidden; */
 
     animation: marquee 10s linear infinite;
 

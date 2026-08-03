@@ -4,28 +4,27 @@ import MiniPlayer from "../../components/miniplayer/MiniPlayer";
 
 export default function MainLayout() {
   return (
-    <div className="main-body h-screen flex border-2 border-white">
+    <div className="h-screen flex bg-[#20253d]">
 
       {/* Sidebar */}
       <div className="w-24 flex-shrink-0">
         <Sidebar />
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      {/* Right Side */}
+      <div className="flex-1 flex flex-col overflow-hidden">
 
-        {/* Screen */}
-        <div className="flex-1 overflow-hidden">
-          <Outlet />
-        </div>
+        {/* Main Screen */}
+      <main className="flex-1 overflow-hidden p-5">
+        <Outlet />
+      </main>
 
-        {/* Mini Player */}
-        <div id="mini-player" className="h-24 border-t border-white">
+        {/* Fixed Player */}
+        <footer className="h-24 border-t border-white/10 bg-[#18181f]">
           <MiniPlayer />
-        </div>
+        </footer>
 
       </div>
-
     </div>
   );
 }

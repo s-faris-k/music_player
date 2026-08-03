@@ -86,23 +86,21 @@ export function PlayerProvider({ children }) {
   /* ----------------------------- */
   /* Next                          */
   /* ----------------------------- */
+    const nextSong = () => {
+      if (queue.length === 0) return;
 
-  const nextSong = () => {
-    if (currentIndex >= queue.length - 1) return;
-
-    setCurrentIndex((i) => i + 1);
-  };
+      setCurrentIndex((i) => (i + 1) % queue.length);
+    };
 
   /* ----------------------------- */
   /* Previous                      */
   /* ----------------------------- */
 
   const previousSong = () => {
-    if (currentIndex <= 0) return;
+    if (queue.length === 0) return;
 
-    setCurrentIndex((i) => i - 1);
+    setCurrentIndex((i) => (i - 1 + queue.length) % queue.length);
   };
-
   /* ----------------------------- */
   /* Pause                         */
   /* ----------------------------- */

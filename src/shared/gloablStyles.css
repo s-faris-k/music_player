@@ -7,3 +7,10 @@
     background-color: #1E2A3E;
     border-radius: 20px;
 }
+
+html,
+body,
+#root {
+  height: 100%;
+  overflow: hidden;
+}
