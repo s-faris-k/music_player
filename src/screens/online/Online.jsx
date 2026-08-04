@@ -9,6 +9,8 @@ import { maphomeSong , mapAlbum} from '../../mappers/songMapper'
 import Songcard from '../../components/SongCard'
 import AlbumCard from '../../components/AlbumCard'
 
+
+
 import './online.css'
 
 export default function Online() {
@@ -43,7 +45,7 @@ export default function Online() {
             if (entry.type === "album") {
               return mapAlbum(entry)
             }
-
+            // console.log(entry)
             return maphomeSong(entry)
           })
         }))
@@ -68,17 +70,14 @@ export default function Online() {
   }, [])
 
   return (
-    <div className='screen-container'>
+        <div className="main-screen flex flex-col h-full">
+          <div className="header-part flex justify-between items-center h-15 flex-shrink-0">
 
-      <div className='online-content'>
-
-        <div className='header'>
-
-          <h1>Latest Songs</h1>
-
-          <div className='search-container'>
-
-            <input
+          <div className = "page-heading text-white strong h-[100%]">
+          Latest Songs
+          </div>
+          <div className="search">
+          <input className="bg-white"
               type="text"
               placeholder="Search songs..."
               value={searchText}
@@ -96,65 +95,38 @@ export default function Online() {
             >
               <CiSearch />
             </button>
-
           </div>
-
         </div>
-
-        {loading && <p>Loading songs...</p>}
+        <div className="online-content-part flex-1 min-h-0 overflow-y-auto">
+        {loading && <p>Loading...</p>}
 
         {error && <p>Error: {error}</p>}
 
-        {!loading && !error && (
-
+        {!loading &&
+          !error &&
           homeData.map((section) => (
-
-            <div
-              key={section.language}
-              className='language-section'
-            >
-
-              <h2 className='language-title'>
-                {section.language.charAt(0).toUpperCase() +
-                  section.language.slice(1)} Songs
+            <div key={section.language} className="language-section">
+              <h2 className="language-title">
+                {section.language}
               </h2>
 
-              {section.items.length > 0 ? (
-
-                <div className='songs_list'>
-
-                  {section.items.map((item) =>
-                  // {console.log("Rendering item:", item)},
-                        item.type === "album" ? (
-                          <AlbumCard
-                            key={item.id}
-                            album={item}
-                            onClick={() => navigate(`/album/${item.id}`)}
-                          />
-                        ) : (
-                          <Songcard
-                            key={item.id}
-                            song={item}
-                            onClick={() => navigate(`/song/${item.id}`)}
-                          />
-                        )
-                      )}
-              
-
-                </div>
-
-              ) : (
-
-                <p>No songs found.</p>
-
-              )}
-
+              <div className="song-list flex gap-3 overflow-x-auto overflow-y-hidden">
+                {section.items.map((item) =>
+                  item.type === "album" ? (
+                    <AlbumCard
+                      key={item.id}
+                      album={item}
+                    />
+                  ) : (
+                    <Songcard
+                      key={item.id}
+                      song={item}
+                    />
+                  )
+                )}
+              </div>
             </div>
-
-          ))
-
-        )}
-
+          ))}
       </div>
 
     </div>

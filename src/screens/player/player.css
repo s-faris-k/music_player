@@ -1,0 +1,60 @@
+.player-container
+{
+    
+}
+
+.glass {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 20px;
+
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.15);
+}
+
+.spin-record {
+    animation: spin 6s linear infinite;
+    transform-origin: center center;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+input[type="range"] {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 9999px;
+    background: #5f6477;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #22c55e;
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #22c55e;
+    border: none;
+    cursor: pointer;
+}

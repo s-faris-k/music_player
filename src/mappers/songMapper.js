@@ -92,10 +92,12 @@ export const mapSearchSong = (song) => {
 
     url: song.url,
 
+    duration: song.duration, 
     albumId: song?.album?.id || null,
 
     album: song?.album?.name || "",
 
+    play_link : song.downloadUrl.at(-1).url,
     artists:
 
       song?.artists?.primary

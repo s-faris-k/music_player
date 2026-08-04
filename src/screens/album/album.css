@@ -15,7 +15,7 @@
     overflow-x: hidden;
 
     box-sizing: border-box;
-    gap: 40px;
+    gap: 20px;
 }
 
 .album-content::-webkit-scrollbar {
@@ -42,7 +42,7 @@
     gap: 30px;
 
     width: 100%;
-    max-width: 1000px;
+    max-width: 100%;
 
     height: 300px;         /* or remove this entirely if you don't need a fixed height */
     align-items: center;   /* instead of flex-end */
@@ -114,4 +114,30 @@
 
 .album-songs::-webkit-scrollbar-thumb:hover {
     background: #777;
+}
+
+.hide-scrollbar {
+    scrollbar-width: none;      /* Firefox */
+    -ms-overflow-style: none;   /* IE/Edge */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none;              /* Chrome, Safari, Edge */
+}
+
+
+.play-album svg {
+    color: white;
+    fill: white;
+    height: max-content;
+    width: 50px;
+}
+
+.play-album {
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.play-album:hover {
+    transform: scale(1.1);
 }

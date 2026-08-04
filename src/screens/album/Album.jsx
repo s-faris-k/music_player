@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import AlbumSongCard from '../../components/AlbumSongCard'
 import { mapSearchSong , mapAlbum} from '../../mappers/songMapper'
+import { BsPlayCircle } from "react-icons/bs";
+import { useNavigate } from 'react-router-dom'
+
 
 
 import './album.css'
@@ -26,6 +29,7 @@ export default function Album() {
   const [albumDetails, setAlbumDetails] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchAlbumDetails = async () => {
@@ -138,7 +142,22 @@ export default function Album() {
 
         </div>
         </div>
-       <div className="album-songs">
+        <div className=" w-200 h-100 flex flex-col">
+          {/* Header */}
+          <div className="h-16 flex items-center px-4">
+          <h2 className="play-album flex items-center gap-2 text-lg font-semibold cursor-pointer">
+            <BsPlayCircle size={24} onClick={() =>
+            navigate(`/player`, {
+              state: { songs: albumDetails.songs, type: "album" },
+
+            })
+          }/>
+            <span>Play All</span>
+          </h2>
+        </div>
+
+          {/* Scrollable List */}
+          <div className="flex-1 overflow-y-auto px-4 pt-2 hide-scrollbar flex flex-col gap-2">
             {albumDetails?.songs?.length > 0 ? (
               albumDetails.songs.map((song) => (
                 <AlbumSongCard
@@ -149,8 +168,9 @@ export default function Album() {
             ) : (
               <p>No songs available for this album.</p>
             )}
-
           </div>
+        </div>
+
 
       </div>
     </div>

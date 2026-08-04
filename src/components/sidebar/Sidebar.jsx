@@ -8,12 +8,6 @@ import { MdOutlineLibraryBooks } from "react-icons/md";
 import { Link } from 'react-router-dom';
 
 
-
-
-
-
-
-
 export default function Sidebar() {
   return (
     <div className='sidebar-container'>
@@ -23,7 +17,7 @@ export default function Sidebar() {
       alt='icon' />
       </Link>
       <div className='nav-items'>
-        <SidebarButton title="play" to="/player" icon ={<FaPlayCircle/>}/>
+        <SidebarButton title="player" to="/player" icon ={<FaPlayCircle/>}/>
         <SidebarButton title="search" to="/search" icon ={<TbMusicSearch/>}/>
         <SidebarButton title= "library" to="/library" icon ={<MdOutlineLibraryBooks/>}/>
       </div>
