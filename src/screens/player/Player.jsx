@@ -54,13 +54,13 @@ const {
           <div className="flex gap-5 h-1/2">
 
             {/* Album Image */}
-              <div className="relative w-[450px] h-[450px] flex items-center justify-center">
+              <div className="relative h-[100%] w-[40%] flex items-center justify-center">
 
               {/* Vinyl */}
               <img
                 src="/images/default.png"
                 alt="Vinyl"
-                className={`w-[400px] h-[400px] object-contain ${
+                className={`w-[100%] h-[100%] object-contain ${
                   isPlaying ? "spin-record" : ""
                 }`}
               />
@@ -77,7 +77,7 @@ const {
             {/* Song Details */}
           <div className="flex flex-col items-center justify-center flex-1 border-2 border-white rounded-lg glass p-6">
 
-            <div className="w-[70%] h-[60%] aspect-square mb-6">
+            <div className="w-[70%] h-[60%] aspect-square mb-2">
               <img
                 src={song.image}
                 alt={song.title}
@@ -93,7 +93,7 @@ const {
               {song.artistNames}
             </p>
 
-       <div className="w-full mt-6">
+       <div className="w-full mt-2">
           <div className="relative h-2 bg-gray-600 rounded-full overflow-hidden">
 
             <div
