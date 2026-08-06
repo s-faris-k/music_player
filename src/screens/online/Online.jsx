@@ -70,65 +70,37 @@ export default function Online() {
   }, [])
 
   return (
-        <div className="main-screen flex flex-col h-full">
-          <div className="header-part flex justify-between items-center h-15 flex-shrink-0">
-
-          <div className = "page-heading text-white strong h-[100%]">
+    <div className="flex h-full flex-col">
+      <header className="flex flex-wrap items-center justify-between gap-4 py-4 flex-shrink-0">
+        <div className="text-white text-2xl font-bold">
           Latest Songs
-          </div>
-          <div className="search">
-          <input className="bg-white"
-              type="text"
-              placeholder="Search songs..."
-              value={searchText}
-              onChange={(e) => setSearchText(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleSearch()
-                }
-              }}
-            />
-
-            <button
-              className='search-button'
-              onClick={handleSearch}
-            >
-              <CiSearch />
-            </button>
-          </div>
         </div>
-        <div className="online-content-part flex-1 min-h-0 overflow-y-auto">
-        {loading && <p>Loading...</p>}
 
-        {error && <p>Error: {error}</p>}
+        <div className="relative w-full sm:w-60">
+          <input
+            className="w-full rounded-full bg-white py-2 pl-4 pr-10 text-black outline-none"
+            type="text"
+            placeholder="Search songs..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
+          />
 
-        {!loading &&
-          !error &&
-          homeData.map((section) => (
-            <div key={section.language} className="language-section">
-              <h2 className="language-title">
-                {section.language}
-              </h2>
+          <button
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-black"
+            onClick={handleSearch}
+          >
+            <CiSearch size={20} />
+          </button>
+        </div>
+      </header>
 
-              <div className="song-list flex gap-3 overflow-x-auto overflow-y-hidden">
-                {section.items.map((item) =>
-                  item.type === "album" ? (
-                    <AlbumCard
-                      key={item.id}
-                      album={item}
-                    />
-                  ) : (
-                    <Songcard
-                      key={item.id}
-                      song={item}
-                    />
-                  )
-                )}
-              </div>
-            </div>
-          ))}
+      <div className="flex-1 overflow-auto bg-[#1E2A3E] rounded-lg" >
+        ...
       </div>
-
     </div>
-  )
-}
+  );}
