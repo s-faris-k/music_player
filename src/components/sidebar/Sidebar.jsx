@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 export default function Sidebar() {
   return (
     <div className='sidebar-container'>
-      <Link to="/online">
+      <Link to="/">
       <img src={appicon} 
       className='app-icon'
       alt='icon' />

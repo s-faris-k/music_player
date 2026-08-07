@@ -6,6 +6,11 @@ import {
   useState,
 } from "react";
 
+import { searchById } from "../library/SongApis"
+import { mapSearchSong } from '../mappers/songMapper'
+
+
+
 const PlayerContext = createContext();
 
 export function PlayerProvider({ children }) {
@@ -37,23 +42,42 @@ export function PlayerProvider({ children }) {
   /* Play Single Song              */
   /* ----------------------------- */
 
-    const playSong = (song) => {
-    if (!song) return;
+const playSong = async (song) => {
+  if (!song) return;
 
-    const existingIndex = queue.findIndex((s) => s.id === song.id);
+  try {
+    // Already have this song in queue
+    const existingIndex = queue.findIndex(
+      (s) => s.id === song.id
+    );
 
     if (existingIndex !== -1) {
-        setCurrentIndex(existingIndex);
-        setCurrentSong(queue[existingIndex]);
-        return;
+      setCurrentIndex(existingIndex);
+      return;
     }
 
-    const newQueue = [...queue, song];
+    // Fetch full song details
+    const songData = await searchById(song.id);
+
+    if (!songData) {
+      console.error("Unable to fetch song:", song.id);
+      return;
+    }
+
+    // Convert detailed API response to your app format
+    const fullSong = mapSearchSong(songData);
+    console.log(fullSong)
+
+    // Add to queue
+    const newQueue = [...queue, fullSong];
 
     setQueue(newQueue);
     setCurrentIndex(newQueue.length - 1);
-    setCurrentSong(song);
-    };
+
+  } catch (error) {
+    console.error("Error playing song:", error);
+  }
+};
 
   /* ----------------------------- */
   /* Play Queue                    */
@@ -141,18 +165,24 @@ export function PlayerProvider({ children }) {
   /* ----------------------------- */
 
   useEffect(() => {
-    // console.log(currentSong);
-    if (!currentSong) return;
+    if (!currentSong?.play_link) return;
 
-    if (!currentSong.play_link) return;
+    const playAudio = async () => {
+      try {
+        audio.src = currentSong.play_link;
+        audio.load();
 
-    audio.src = currentSong.play_link;
+        await audio.play();
 
-    currentSong
+        setIsPlaying(true);
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          console.error("Audio play error:", error);
+        }
+      }
+    };
 
-    audio.play();
-
-    setIsPlaying(true);
+    playAudio();
   }, [currentSong]);
 
   /* ----------------------------- */
