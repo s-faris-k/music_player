@@ -15,7 +15,7 @@ export default function App() {
     <Routes>
       <Route element={<MainLayout />}>
         <Route path="/" element={<Online />} />
-        <Route path="/online" element={<Online />} />
+        {/* <Route path="/online" element={<Online />} /> */}
         <Route path="/search" element={<Search />} />
         <Route path="/library" element={<Library />} />
         <Route path="/album/:id" element={<Album />} />

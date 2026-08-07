@@ -111,19 +111,30 @@ export async function searchWithKey(query) {
 }
 
 
-export async function fetchSongById(id) {
-
+export async function searchById(id) {
   try {
+    const response = await fetch (`https://saavn.sumit.co/api/songs/${id}`)
+    const data = await response.json()
+    // console.log("inside searchById", data.data);
+    return data.data[0] || null
+  } 
+  catch (error) 
+  {
+    console.error("Error fetching song")  
+  }
+  return null
+  
+}
 
+export async function fetchSongById(id) {
+  try {
     const response = await fetch(
-
       `https://saavn.sumit.co/api/songs?ids=${encodeURIComponent(id)}`
-
     )
 
     const data = await response.json()
 
-    // console.log(data)
+    // console.log("inside songapi" +data)
 
     return data.data[0] || null
 
@@ -137,6 +148,8 @@ export async function fetchSongById(id) {
     return null
   }
 }
+
+
 
 
 

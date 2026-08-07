@@ -1,74 +1,68 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import { CiSearch } from "react-icons/ci";
+import { useSearchParams } from "react-router-dom";
 
-
-import {
-  useSearchParams,
-  useNavigate
-} from 'react-router-dom'
-
-import { searchWithKey } from "../../library/SongApis"
+import { searchWithKey } from "../../library/SongApis";
 
 import {
   mapSearchSong,
   mapAlbum,
   mapArtist,
-  mapPlaylist
-} from '../../mappers/songMapper'
+  mapPlaylist,
+} from "../../mappers/songMapper";
 
-import Songcard from '../../components/SongCard'
-import AlbumCard from '../../components/AlbumCard'
-import ArtistCard from '../../components/ArtistCard'
+import { usePlayer } from "../../context/PlayerContext";
 
-import './search.css'
+import Songcard from "../../components/SongCard";
+import AlbumCard from "../../components/AlbumCard";
+import ArtistCard from "../../components/ArtistCard";
+
+import "./search.css";
 
 export default function Search() {
+  const [searchParams] = useSearchParams();
 
-  const [searchParams] = useSearchParams()
+  const { playSong } = usePlayer();
 
-  const navigate = useNavigate()
-
-  const query = searchParams.get("q") || ""
+  const query = searchParams.get("q") || "";
 
   const [searchResults, setSearchResults] = useState({
     songs: [],
     albums: [],
     artists: [],
-    playlists: []
-  })
+    playlists: [],
+  });
 
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const [error, setError] = useState(null)
+  const [searchText, setSearchText] = useState(query);
 
-  const [searchText, setSearchText] = useState(query)
-
+  // --------------------------------
   // Sync input with URL query
+  // --------------------------------
   useEffect(() => {
+    setSearchText(query);
+  }, [query]);
 
-    setSearchText(query)
-
-  }, [query])
-
+  // --------------------------------
   // Fetch search results
+  // --------------------------------
   useEffect(() => {
-
-    if (!query.trim()) return
+    if (!query.trim()) {
+      return;
+    }
 
     const searchSong = async () => {
-
       try {
+        setLoading(true);
+        setError(null);
 
-        setLoading(true)
+        const response = await searchWithKey(query);
 
-        setError(null)
-
-        const response = await searchWithKey(query)
-
-        console.log("Search results:", response)
+        console.log("Search results:", response);
 
         const mappedData = {
-
           songs:
             response?.songs?.results?.map(mapSearchSong) || [],
 
@@ -79,189 +73,168 @@ export default function Search() {
             response?.artists?.results?.map(mapArtist) || [],
 
           playlists:
-            response?.playlists?.results?.map(mapPlaylist) || []
-        }
+            response?.playlists?.results?.map(mapPlaylist) || [],
+        };
 
-        setSearchResults(mappedData)
+        setSearchResults(mappedData);
 
       } catch (err) {
-
-        console.error(err)
-
-        setError(err?.message || String(err))
-
+        console.error(err);
+        setError(err?.message || String(err));
       } finally {
-
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    searchSong()
+    searchSong();
+  }, [query]);
 
-  }, [query])
-
+  // --------------------------------
+  // Search
+  // --------------------------------
   const handleSearch = () => {
-
     if (!searchText.trim()) {
-
-      alert("Please enter a search term.")
-
-      return
+      alert("Please enter a search term.");
+      return;
     }
 
-    navigate(
-      `/search?q=${encodeURIComponent(searchText)}`
-    )
-  }
+    // Use your existing navigation logic here
+    window.history.pushState(
+      {},
+      "",
+      `/search?q=${encodeURIComponent(searchText.trim())}`
+    );
 
-  // Empty query screen
+    // Since pushState doesn't notify React Router,
+    // use location navigation instead if needed.
+    window.location.reload();
+  };
+
+  // --------------------------------
+  // Empty query
+  // --------------------------------
   if (!query.trim()) {
-
     return (
+      <div className="flex h-full min-w-0 flex-col">
 
-      <div className='screen-container'>
-
-        <div className='online-content'>
-
-          <div className='header'>
-
-            <h1>Search</h1>
-
-            <div className='search-container'>
-
-              <input
-                type="text"
-                placeholder="Search songs..."
-                className='search-input'
-                value={searchText}
-                onChange={(e) =>
-                  setSearchText(e.target.value)
-                }
-                onKeyDown={(e) => {
-
-                  if (e.key === "Enter") {
-
-                    handleSearch()
-                  }
-                }}
-              />
-
-              <CiSearch
-                className='search-button'
-                onClick={handleSearch}
-              >
-               
-              </CiSearch>
-
-            </div>
-
-          </div>
-
-          <div className='no-query'>
-
-            <h2>
-              Enter a search term to find songs,
-              albums, artists, and playlists.
-            </h2>
-
-          </div>
-
-        </div>
-
-      </div>
-    )
-  }
-
-  return (
-
-    <div className='screen-container'>
-
-      <div className='online-content'>
-
-        {/* Header */}
-
-        <div className='header'>
-
-          <h1>Search</h1>
-
-          <div className='search-container'>
+        {/* Search */}
+        <header className="flex flex-shrink-0 items-center py-4">
+          <div className="relative ml-auto w-60">
 
             <input
+              className="w-full rounded-full bg-white py-2 pl-4 pr-10 text-black outline-none"
               type="text"
               placeholder="Search songs..."
-              className='search-input'
               value={searchText}
-              onChange={(e) =>
-                setSearchText(e.target.value)
-              }
+              onChange={(e) => setSearchText(e.target.value)}
               onKeyDown={(e) => {
-
                 if (e.key === "Enter") {
-
-                  handleSearch()
+                  handleSearch();
                 }
               }}
             />
 
             <button
-              className='search-button'
+              type="button"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-black"
               onClick={handleSearch}
             >
-              Search
+              <CiSearch size={20} />
             </button>
 
           </div>
+        </header>
 
+        {/* Empty content */}
+        <div className="flex-1 min-w-0 overflow-y-auto rounded-lg bg-[#455675] online-content pb-2">
         </div>
 
+      </div>
+    );
+  }
+
+  // --------------------------------
+  // Search results
+  // --------------------------------
+  return (
+    <div className="flex h-full min-w-0 flex-col">
+
+      {/* Search */}
+      <header className="flex flex-shrink-0 items-center py-4">
+        <div className="relative ml-auto w-60">
+
+          <input
+            className="w-full rounded-full bg-white py-2 pl-4 pr-10 text-black outline-none"
+            type="text"
+            placeholder="Search songs..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
+          />
+
+          <button
+            type="button"
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-black"
+            onClick={handleSearch}
+          >
+            <CiSearch size={20} />
+          </button>
+
+        </div>
+      </header>
+
+      {/* Content */}
+      <div className="flex-1 min-w-0 overflow-y-auto rounded-lg bg-[#455675] online-content p-2">
+
         {/* Loading */}
-
         {loading && (
-
-          <p>Loading songs...</p>
-
+          <p className="p-5 text-white">
+            Loading songs...
+          </p>
         )}
 
         {/* Error */}
-
         {error && (
-
-          <p>Error: {error}</p>
-
+          <p className="p-5 text-white">
+            Error: {error}
+          </p>
         )}
 
         {/* Results */}
-
         {!loading && !error && (
-
           <>
 
-            {/* Songs */}
+            {/* ---------------- Songs ---------------- */}
 
-            <div className='language-section'>
+            <div className="language-section">
 
-              <h2 className='language-title'>
+              <h2 className="language-title text-white pt-2 pb-2">
                 Songs
               </h2>
 
-              <div className='songs_list'>
+              <div className="flex min-w-0 gap-4 overflow-x-auto overflow-y-hidden song-list">
 
                 {searchResults.songs.length > 0 ? (
 
                   searchResults.songs.map((song) => (
 
                     <Songcard
+                      key={song.id}
                       song={song}
-                      onClick={() =>
-                        navigate(`/song/${song.id}`)
-                      }
+                      onClick={() => playSong(song)}
                     />
 
                   ))
 
                 ) : (
 
-                  <p>No songs found.</p>
+                  <p className="text-white">
+                    No songs found.
+                  </p>
 
                 )}
 
@@ -269,15 +242,16 @@ export default function Search() {
 
             </div>
 
-            {/* Albums */}
 
-            <div className='language-section'>
+            {/* ---------------- Albums ---------------- */}
 
-              <h2 className='language-title'>
+            <div className="language-section">
+
+              <h2 className="language-title text-white pt-2 pb-2">
                 Albums
               </h2>
 
-              <div className='songs_list'>
+              <div className="flex min-w-0 gap-4 overflow-x-auto overflow-y-hidden song-list">
 
                 {searchResults.albums.length > 0 ? (
 
@@ -286,16 +260,15 @@ export default function Search() {
                     <AlbumCard
                       key={album.id}
                       album={album}
-                      onClick={() =>
-                        navigate(`/album/${album.id}`)
-                      }
                     />
 
                   ))
 
                 ) : (
 
-                  <p>No albums found.</p>
+                  <p className="text-white">
+                    No albums found.
+                  </p>
 
                 )}
 
@@ -303,15 +276,16 @@ export default function Search() {
 
             </div>
 
-            {/* Artists */}
 
-            <div className='language-section'>
+            {/* ---------------- Artists ---------------- */}
 
-              <h2 className='language-title'>
-                Artists
+            <div className="language-section">
+
+              <h2 className="language-title text-white pt-2 pb-2">
+                Albums
               </h2>
 
-              <div className='songs_list'>
+              <div className="flex min-w-0 gap-4 overflow-x-auto overflow-y-hidden song-list">
 
                 {searchResults.artists.length > 0 ? (
 
@@ -326,38 +300,9 @@ export default function Search() {
 
                 ) : (
 
-                  <p>No artists found.</p>
-
-                )}
-
-              </div>
-
-            </div>
-
-            {/* Playlists */}
-
-            <div className='language-section'>
-
-              <h2 className='language-title'>
-                Playlists
-              </h2>
-
-              <div className='songs_list'>
-
-                {searchResults.playlists.length > 0 ? (
-
-                  searchResults.playlists.map((playlist) => (
-
-                    <AlbumCard
-                      key={playlist.id}
-                      album={playlist}
-                    />
-
-                  ))
-
-                ) : (
-
-                  <p>No playlists found.</p>
+                  <p className="text-white">
+                    No artists found.
+                  </p>
 
                 )}
 
@@ -366,11 +311,10 @@ export default function Search() {
             </div>
 
           </>
-
         )}
 
       </div>
 
     </div>
-  )
+  );
 }

@@ -1,6 +1,7 @@
 import { usePlayer } from "../../context/PlayerContext";
 import { FaPlay, FaPause } from "react-icons/fa";
-import { RxTrackPrevious, RxTrackNext } from "react-icons/rx";
+import { RxTrackPrevious, RxTrackNext,RxDownload } from "react-icons/rx";
+import {useState} from 'react'
 
 export default function MiniPlayer() {
   const {
@@ -14,12 +15,48 @@ export default function MiniPlayer() {
     previousSong,
     nextSong,
   } = usePlayer();
-
+  const [showDownloads, setShowDownloads] = useState(false);
+  // console.log("DOWNLOAD LINKS:", currentSong?.play_link);
   const song = currentSong || {
     title: "No Song Playing",
     artistNames: "Select a song to start listening",
     image: "/images/default.png",
   };
+
+const downloadFile = async (item) => {
+  if (!item?.url || !currentSong) return;
+
+  try {
+    const response = await fetch(item.url);
+
+    if (!response.ok) {
+      throw new Error(`Download failed: ${response.status}`);
+    }
+
+    const blob = await response.blob();
+
+    const blobUrl = URL.createObjectURL(blob);
+
+    const filename =
+      `${currentSong.title || "song"}.mp4`
+        .replace(/[<>:"/\\|?*]/g, "")
+        .trim();
+
+    const link = document.createElement("a");
+    link.href = blobUrl;
+    link.download = filename;
+
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+
+    URL.revokeObjectURL(blobUrl);
+
+  } catch (error) {
+    console.error("Download failed:", error);
+  }
+};
+
 
   const formatTime = (sec) => {
     if (!sec || isNaN(sec)) return "0:00";
@@ -89,7 +126,39 @@ export default function MiniPlayer() {
         </div>
 
         {/* Right */}
-        <div className="w-1/3"></div>
+<div className="relative w-1/3 flex items-center justify-center">
+
+  {/* Download button */}
+  <button
+    type="button"
+    className="text-gray-300 hover:text-white"
+    onClick={() => setShowDownloads((prev) => !prev)}
+  >
+    <RxDownload size={20} />
+  </button>
+
+  {/* Download options */}
+  {showDownloads && (
+    <div className="absolute bottom-full right-0 mb-2 w-32 rounded-lg bg-[#1E2A3E] p-2 shadow-lg">
+
+{currentSong?.down_links?.map((item) => (
+  <button
+    key={item.quality}
+    onClick={() => {
+      downloadFile(item);
+      setShowDownloads(false);
+    }}
+    className="block w-full rounded px-3 py-2 text-left text-white hover:bg-[#455675]"
+  >
+    {item.quality}
+  </button>
+))}
+
+    </div>
+  )}
+
+</div>
+
 
       </div>
 

@@ -1,9 +1,9 @@
-.online-content-part {
+.online-content {
   scrollbar-width: none;      /* Firefox */
   -ms-overflow-style: none;   /* IE/Edge */
 }
 
-.online-content-part::-webkit-scrollbar {
+.online-content::-webkit-scrollbar {
   display: none;              /* Chrome, Safari */
 }
 

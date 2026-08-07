@@ -72,7 +72,7 @@ export const maphomeSong = (song) => {
 
 export const mapSearchSong = (song) => {
 
-  // console.log("Mapping search song:", song)
+  console.log("Mapping search song:", song)
 
   return {
 
@@ -90,8 +90,7 @@ export const mapSearchSong = (song) => {
 
     language: song.language,
 
-    url: song.url,
-
+    down_links: song.downloadUrl?.slice(-3) || [],
     duration: song.duration, 
     albumId: song?.album?.id || null,
 
